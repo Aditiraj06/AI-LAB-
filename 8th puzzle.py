@@ -19,6 +19,7 @@ def get_neighbors(state):
             new_blank = new_row * 3 + new_col
 
             new_state = list(state)
+
             new_state[blank], new_state[new_blank] = (
                 new_state[new_blank],
                 new_state[blank]
@@ -30,9 +31,11 @@ def get_neighbors(state):
 
 
 def depth_limited_dfs(state, goal, depth, path, visited):
+    # Goal test
     if state == goal:
         return path
 
+    # Depth limit reached
     if depth == 0:
         return None
 
@@ -40,6 +43,7 @@ def depth_limited_dfs(state, goal, depth, path, visited):
 
     for move, next_state in get_neighbors(state):
         if next_state not in visited:
+
             result = depth_limited_dfs(
                 next_state,
                 goal,
@@ -51,6 +55,7 @@ def depth_limited_dfs(state, goal, depth, path, visited):
             if result is not None:
                 return result
 
+    # Remove state so it can be explored in another path
     visited.remove(state)
 
     return None
@@ -84,9 +89,13 @@ def read_state(label):
     for _ in range(3):
         values.extend(map(int, input().split()))
 
+    # Check that exactly 9 numbers were entered
     if len(values) != 9:
-        raise ValueError("Enter exactly 9 numbers.")
+        raise ValueError(
+            "State must contain exactly 9 numbers."
+        )
 
+    # Check that numbers 0 to 8 appear exactly once
     if sorted(values) != list(range(9)):
         raise ValueError(
             "State must contain numbers 0 to 8 exactly once."
